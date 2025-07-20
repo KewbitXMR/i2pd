@@ -6,24 +6,39 @@
 * See full license text in LICENSE file at top of project tree
 */
 
-#ifndef CAPI_H__
-#define CAPI_H__
+/*
+* Copyright (c) 2025, KewbitXMR (kewbitxmr@protonmail.com)
+*
+* This file is part of Purple i2pd project and licensed under BSD3
+*
+* See full license text in LICENSE file at top of project tree
+*/
+
+// capi.h
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// initialization start and stop
-void C_InitI2P (int argc, char *argv[], const char * appName);
-//void C_InitI2P (int argc, char** argv, const char * appName);
-void C_TerminateI2P ();
-void C_StartI2P ();
-// write system log to logStream, if not specified to <appName>.log in application's folder
-void C_StopI2P ();
-void C_RunPeerTest (); // should be called after UPnP
+#include <stdbool.h>
+#include <stdint.h>
+
+// Handle types
+typedef void* I2PDClient;
+
+// Initialization / Shutdown
+void C_I2PInit(const char* config_dir);
+void C_I2PShutdown();
+
+// Local Destination Management
+I2PDClient C_CreateLocalDestination(bool isPublic);
+void C_DestroyLocalDestination(I2PDClient client);
+
+// Stream Management
+int C_ConnectStream(I2PDClient client, const char* base64_dest);
+void C_ListenStreams(I2PDClient client, void (*acceptor_cb)(int stream_id));
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif
